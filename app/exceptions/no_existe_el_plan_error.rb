@@ -1,0 +1,2 @@
+class NoExisteElPlanError < RuntimeError
+end

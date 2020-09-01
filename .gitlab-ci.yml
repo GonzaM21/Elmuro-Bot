@@ -1,0 +1,32 @@
+image: ruby:2.5.7
+before_script:
+  - apt-get update -qq && apt-get install -y -qq libpq-dev cmake
+  - ruby -v
+  - which ruby
+  - gem install bundler --no-document
+  - bundle install --without staging production
+stages:
+  - build
+  - deploy_staging
+  - deploy_production
+
+job_build:
+  stage: build
+  script:
+    - RACK_ENV=test bundle exec rake
+
+job_deploy_staging:
+  stage: deploy_staging
+  script:
+    - gem install dpl
+    - dpl --provider=heroku --app=elmuro-bot-staging-env --api-key=cd8b5b8b-469b-490d-8757-4988496bb687
+  only:
+    - staging
+
+job_deploy_production:
+  stage: deploy_production
+  script:
+    - gem install dpl
+    - dpl --provider=heroku --app=elmuro-bot --api-key=c21d1a42-1434-4212-af64-aa9d0f4d646b
+  only:
+    - master

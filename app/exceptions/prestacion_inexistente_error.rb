@@ -1,0 +1,2 @@
+class PrestacionInexistenteError < RuntimeError
+end
